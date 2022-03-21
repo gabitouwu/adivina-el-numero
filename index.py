@@ -1,5 +1,5 @@
-from time import sleep
-import random 
+import random
+
 
 BIENVENIDA='''
 
@@ -25,154 +25,153 @@ NOMBRE_DEL_JUEGO = '''
 ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝    ╚══════╝╚══════╝    ╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
                                                                                                                                 '''
 
-
-def bienvenida(BIENVENIDA, NOMBRE_DEL_JUEGO): 
-    for i in BIENVENIDA:
-        print(i, end='')
-    print('\n')
-
-    print(NOMBRE_DEL_JUEGO)
-
-def nombreDelJugador():
-    sleep(1)
-    print('Ingresa tu nombre:', end=' ')
-    nombre = input()
-    while nombre == '':
-        print('¡Ingresa un NOMBRE!')
-        nombre = input()
-        if nombre != '':
-            break
-    return nombre
-
-def explicacionDelJuego(nombreDelJugador):
-    for i in 'Hola, ' + nombreDelJugador + ', estoy pensando en un nuero del 1 al 20, ':
-        sleep(0.029)
-        print(i, end='')
-
-    print()
-    for i in 'intenta adivinarlo, tienes solo 6 intentos, ¡suerte!':
-        sleep(0.029)
-        print(i, end = '')
+def comprobarQSeaNum(lNP, numMin, numMax): # v = valor(estimacion), lNP = lista de numeros posibles, NUMMAX = Numero maximo por adivinar
+    v = input()
+    while v not in lNP:
+        print('Ingresa un numero (%s al %s)' % (numMin, numMax))
+        v = input()
         
-    print()
+    return v
 
-def numeroRandom(): #Se crea un numero random del 1 al 20
-    numeroRandom = random.randint(1, 20)
-
-    return numeroRandom
-#--------------------------------------------------------------
-def ingresarValor():
-    for i in 'Ingrese su estimacion a continuacion:':
-        sleep(0.029)
-        print(i, end='')
-
-    print()
-    estimacion = input()
-    while True:
-        while len(estimacion) >= 0:
-            if estimacion in '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'.split():
-                return int(estimacion)
-            else:
-                for i in '¡SIGUE LAS NORMAS!':
-                    sleep(0.029)
-                    print(i, end='')
-                print()
-                estimacion = input()
-                
-#----------------------------------------------------------
-def comprobarEstimacion(estimacionDelJugador, numeroRandom, intentosDisponibles, numeroDeIntentos): #Aqui se comprueba la estimacion del jugador
+def pista(nS, v, iJ): # nS = numero Secreto, v = valor(estimacion), iJ = intentos del Jugador
+    iJ = iJ + 1
     
-    while numeroDeIntentos < intentosDisponibles:
-    
-        numeroDeIntentos = numeroDeIntentos + 1
-    
-        if estimacionDelJugador < numeroRandom:
-            sleep(1)
-            print('El valor ingresado es muy bajo')
-            if numeroDeIntentos == 1:
-                print('Te quedan 5 intentos')
+    if v > nS:
+        return 'Tu estimación es muy alta', iJ
 
-            if numeroDeIntentos == 2:
-                print('Te quedan 4 intentos')
+    elif v < nS:
+        return 'Tu estimacion es muy baja.', iJ
 
-            if numeroDeIntentos == 3:
-                print('Te quedan 3 intentos')
+    return 'Ganador', iJ
 
-            if numeroDeIntentos == 4:
-                print('Te quedan 2 intentos')
+def compQNoSeaRep(v, lNI): #lNI = lista de Numeros Ingresados
+    if v in lNI:
+        return True
 
-            if numeroDeIntentos == 5:
-                print('Te quedan 1 intentos')
-    
-            if numeroDeIntentos == 6:
-                print('¡Se te terminaron los intentos!')
-                
-        if estimacionDelJugador > numeroRandom:
-            sleep(1)
-            print('El valor ingresado es muy alto')
+def ganador(nS, v, iD, iJ): # nS = numero secreto, v = valor(estimacion), iD = intentos Disponibles, iJ = intentos del Jugador
+    if v == nS:    
+        return 'Ganaste.'
 
-            if numeroDeIntentos == 1:
-                print('Te quedan 5 intentos')
+    if iD == iJ:
+        return 'Perdiste'
 
-            if numeroDeIntentos == 2:
-                print('Te quedan 4 intentos')
+def T_L_E_S(listaDeEnteros):
+    lstr = []
+    for i in listaDeEnteros:
+        o = str(i)
+        lstr.append(o)
 
-            if numeroDeIntentos == 3:
-                print('Te quedan 3 intentos')
+    return lstr 
 
-            if numeroDeIntentos == 4:
-                print('Te quedan 2 intentos')
+def jugarDeNuevo():
+    r = input('¿Deseas volver a jugar? (S/N): ')
+    if r == '':
+        return True
 
-            if numeroDeIntentos == 5:
-                print('Te quedan 1 intentos')
-    
-            if numeroDeIntentos == 6:
-                print('¡Se te terminaron los intentos!')
-
-        if estimacionDelJugador == numeroRandom:
-            break
-
-        if numeroDeIntentos == intentosDisponibles:
-            break
-
-        estimacionDelJugador = ingresarValor()
-
-
-    if estimacionDelJugador == numeroRandom:
-        sleep(2)
-        print('¡Correcto ganaste en ' + str(numeroDeIntentos) + ' intentos!')
-
-    if estimacionDelJugador != numeroRandom:
-        sleep(2)
-        print('¡El número en el que estaba pensando era el ' + str(numeroRandom) + '!')
-
-    terminarJuego = True
-
-    return terminarJuego
-
-def jugarDeNuevo(): 
-    print('¿Deseas volver a jugar de nuevo? (sí o no)')
-    return input().lower().startswith('s') 
-
-def ejecutarJuego():
-    intentosDisponibles = 6 
-    intentosDelJugador = 0
-
-    explicacionDelJuego(nombreDelJugador())
-
-    estimacionDelJugador = ingresarValor()
-
-    terminarJuego = comprobarEstimacion(estimacionDelJugador, numeroRandom(), intentosDisponibles, intentosDelJugador) 
-        
-    return terminarJuego
-
-bienvenida(BIENVENIDA, NOMBRE_DEL_JUEGO)    
-
-terminarJuego = ejecutarJuego()
-
-while terminarJuego == True:
-    trueOrFalse = jugarDeNuevo()
-    if trueOrFalse == True:
-        terminarJuego = ejecutarJuego()
+    if r.startswith('s') or r.startswith('S'):
+        return True
     else:
+        return False
+
+def siNo():
+    
+    r = input('¿Deseas ingresar los numeros por adivinar? (S/N): ') 
+    if r == '':
+        return True
+
+    if r.startswith('s') or r.startswith('S'):
+        return True
+    else:
+        return False
+
+def minAndMax(num):
+    
+    for i in num:
+        if i not in '0 1 2 3 4 5 6 7 8 9'.split():
+            return True
+    if num == '':
+        return True
+    
+    return False
+
+
+    
+#---------------------------------------------------------------
+ 
+MAXADIVINANZAS = 6
+frases = ['Ya usaste ese numero', 'Ingresa otro numero', '¿Enserio?']
+print(BIENVENIDA)
+print(NOMBRE_DEL_JUEGO)
+
+
+
+while True:
+    a = False
+    numMin = 1
+    numMax = 0
+
+    si_No = siNo()
+    if si_No:
+
+        print('Ingresa el numero minimo y el numero máximo por adivinar a continuacion.')
+
+
+
+        while numMin > numMax:
+            numMin = input('Numero min: ')    
+            while minAndMax(numMin) or int(numMin) > 50:
+                print('Ingrese numeros y que no sean mayores a 50.')
+                numMin = input('Numero min: ')
+
+            numMax = input('Numero max: ') 
+            while minAndMax(numMax) or int(numMax) > 50:    
+                print('Ingrese numeros y que no sean mayores a 50.')
+                numMax = input('Numero max: ')
+
+            if int(numMin) > int(numMax):
+                print('El número mínimo no puede ser mayor al máximo.')
+
+        numMin = int(numMin)
+        numMax = int(numMax)
+
+        a = True
+
+    if not(a):
+        numMin = 1
+        numMax = 22
+
+    numPosibles = list(range(numMin, numMax + 1))
+    lstr = T_L_E_S(numPosibles)
+
+    print()
+    print('Estoy pensando en un número del %s al %s.' % (numMin, numMax))
+    print('Ingresa tu estimacion a continuación:')
+    print('Tienes solo %s intentos.' % (MAXADIVINANZAS))
+    numSecreto = random.randint(numMin, numMax)
+    numIngresados = []
+    numIntentos = 1
+    
+    while not(numIntentos == MAXADIVINANZAS):
+        print('Intento #%s.' % (numIntentos))
+        valor = comprobarQSeaNum(lstr, numMin, numMax)
+        while compQNoSeaRep(valor, numIngresados):
+            random.shuffle(frases)
+            i = random.randint(0, (len(frases) - 1))
+            print(frases[i])
+            valor = comprobarQSeaNum(lstr, numMin, numMax)
+
+        numIngresados.append(valor)
+        pistas, numIntentos = pista(numSecreto, int(valor), numIntentos)
+        g = ganador(numSecreto, int(valor), MAXADIVINANZAS, numIntentos)
+        if g:
+            if g == 'Ganaste.':
+                print(g)
+                break
+            else:
+                print(g, ', el numero era %s.' % (numSecreto))
+                break
+                
+        print(pistas)
+        
+    if not(jugarDeNuevo()):
         break
