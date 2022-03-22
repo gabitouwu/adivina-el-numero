@@ -2,7 +2,6 @@ import random
 
 
 BIENVENIDA='''
-
  ▄▄▄▄    ██▓▓█████  ███▄    █ ██▒   █▓▓█████  ███▄    █  ██▓▓█████▄  ▒█████   ▐██▌ 
 ▓█████▄ ▓██▒▓█   ▀  ██ ▀█   █▓██░   █▒▓█   ▀  ██ ▀█   █ ▓██▒▒██▀ ██▌▒██▒  ██▒ ▐██▌ 
 ▒██▒ ▄██▒██▒▒███   ▓██  ▀█ ██▒▓██  █▒░▒███   ▓██  ▀█ ██▒▒██▒░██   █▌▒██░  ██▒ ▐██▌ 
@@ -15,8 +14,6 @@ BIENVENIDA='''
       ░                           ░                          ░                     '''
 
 NOMBRE_DEL_JUEGO = '''
-
-
  █████╗ ██████╗ ██╗██╗   ██╗██╗███╗   ██╗ █████╗     ███████╗██╗         ███╗   ██╗██╗   ██╗███╗   ███╗███████╗██████╗  ██████╗ 
 ██╔══██╗██╔══██╗██║██║   ██║██║████╗  ██║██╔══██╗    ██╔════╝██║         ████╗  ██║██║   ██║████╗ ████║██╔════╝██╔══██╗██╔═══██╗
 ███████║██║  ██║██║██║   ██║██║██╔██╗ ██║███████║    █████╗  ██║         ██╔██╗ ██║██║   ██║██╔████╔██║█████╗  ██████╔╝██║   ██║
@@ -51,9 +48,10 @@ def compQNoSeaRep(v, lNI): #lNI = lista de Numeros Ingresados
 def ganador(nS, v, iD, iJ): # nS = numero secreto, v = valor(estimacion), iD = intentos Disponibles, iJ = intentos del Jugador
     if v == nS:    
         return 'Ganaste.'
-
-    if iD == iJ:
-        return 'Perdiste'
+    elif iD == iJ:
+        return 'Perdiste.'
+    else:
+        return 1
 
 def T_L_E_S(listaDeEnteros):
     lstr = []
@@ -73,8 +71,7 @@ def jugarDeNuevo():
     else:
         return False
 
-def siNo():
-    
+def siNo():    
     r = input('¿Deseas ingresar los numeros por adivinar? (S/N): ') 
     if r == '':
         return True
@@ -85,7 +82,6 @@ def siNo():
         return False
 
 def minAndMax(num):
-    
     for i in num:
         if i not in '0 1 2 3 4 5 6 7 8 9'.split():
             return True
@@ -94,16 +90,10 @@ def minAndMax(num):
     
     return False
 
-
-    
-#---------------------------------------------------------------
- 
-MAXADIVINANZAS = 6
+MAXADIVINANZAS = 7
 frases = ['Ya usaste ese numero', 'Ingresa otro numero', '¿Enserio?']
 print(BIENVENIDA)
 print(NOMBRE_DEL_JUEGO)
-
-
 
 while True:
     a = False
@@ -114,8 +104,6 @@ while True:
     if si_No:
 
         print('Ingresa el numero minimo y el numero máximo por adivinar a continuacion.')
-
-
 
         while numMin > numMax:
             numMin = input('Numero min: ')    
@@ -143,15 +131,16 @@ while True:
     numPosibles = list(range(numMin, numMax + 1))
     lstr = T_L_E_S(numPosibles)
 
-    print()
-    print('Estoy pensando en un número del %s al %s.' % (numMin, numMax))
+    print('\nEstoy pensando en un número del %s al %s.' % (numMin, numMax))
     print('Ingresa tu estimacion a continuación:')
+    MAXADIVINANZAS -= 1
     print('Tienes solo %s intentos.' % (MAXADIVINANZAS))
+    MAXADIVINANZAS += 1
     numSecreto = random.randint(numMin, numMax)
     numIngresados = []
     numIntentos = 1
-    
-    while not(numIntentos == MAXADIVINANZAS):
+
+    while True:
         print('Intento #%s.' % (numIntentos))
         valor = comprobarQSeaNum(lstr, numMin, numMax)
         while compQNoSeaRep(valor, numIngresados):
@@ -162,14 +151,13 @@ while True:
 
         numIngresados.append(valor)
         pistas, numIntentos = pista(numSecreto, int(valor), numIntentos)
-        g = ganador(numSecreto, int(valor), MAXADIVINANZAS, numIntentos)
-        if g:
-            if g == 'Ganaste.':
-                print(g)
-                break
-            else:
-                print(g, ', el numero era %s.' % (numSecreto))
-                break
+        
+        if ganador(numSecreto, int(valor), MAXADIVINANZAS, numIntentos) == 'Ganaste.':
+            print('Ganaste')
+            break
+        elif ganador(numSecreto, int(valor), MAXADIVINANZAS, numIntentos) == 'Perdiste.':
+            print('Perdiste, el numero era %s.' % (numSecreto))
+            break
                 
         print(pistas)
         
